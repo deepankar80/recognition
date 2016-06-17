@@ -1,0 +1,90 @@
+<div class="container app" style="margin-left: 40px" align="center">
+	<form name="adminForm" class="form-horizontal" novalidate="">
+		<div class="form-group" style="width: 80%; margin-left: -60px">
+
+			<div class="col-sm-10">
+				<div class="form-group">
+					<label class="control-label col-sm-3 input-sm">Recognition
+						Period desc</label>
+
+					<div class="col-sm-7">
+
+						<input autocomplete="off" type="text" id="recDesc" name="recognitionDescription"
+							autofocus="" ng-model="recDesc"
+							placeholder="Enter Nomination Period"
+							class="form-control input-sm immediate-help" required=""></input>
+
+					</div>
+				</div>
+			</div>
+
+
+			<div class="col-sm-10">
+				<div class="form-group">
+					<label class="col-sm-3 control-label input-sm">Recognition
+						start date</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control input-sm"
+							datepicker-popup="MM/dd/yyyy" ng-model="recognitionPeriodStart"
+							is-open="opened1" min-date="'2012-06-22'" max-date="'2015-06-22'"
+							name="recognitionPeriodStart" id="recognitionPeriodStart"
+							close-text="Close" required="" />
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-10">
+				<div class="form-group">
+					<label class="col-sm-3 control-label input-sm">Recognition
+						end date</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control input-sm"
+							datepicker-popup="MM/dd/yyyy" ng-model="recognitionPeriodEnd"
+							is-open="opened2" min-date="'2012-06-22'" max-date="'2015-06-22'"
+							name="recognitionPeriodEnd" id="recognitionPeriodEnd"
+							close-text="Close" required="" />
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-10">
+				<div class="form-group">
+					<label class="col-sm-3 control-label input-sm">Submission
+						Cut off date</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control input-sm"
+							datepicker-popup="MM/dd/yyyy" ng-model="recognitionPeriodCutoff"
+							is-open="opened3" min-date="'2012-06-22'" max-date="'2015-06-22'"
+							name="recognitionPeriodCutoff" id="recognitionPeriodCutoff"
+							close-text="Close" required="" />
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-10">
+				<div class="form-group">
+					<label class="col-sm-3 control-label input-sm">Voting Cut
+						off date</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control input-sm"
+							datepicker-popup="MM/dd/yyyy" ng-model="votingCutoff"
+							is-open="opened4" min-date="'2012-06-22'" max-date="'2015-06-22'"
+							name="votingCutoff" id="votingCutoff" close-text="Close"
+							required="" />
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<p align="right">
+					<input type="button" class="btn btn-primary" value="Open"
+						ng-click="updateCutoff()"
+						ng-disabled="recognitionPeriodStart.$dirty &amp;&amp; recognitionPeriodStart.$invalid ||  
+								recognitionPeriodEnd.$dirty &amp;&amp; recognitionPeriodEnd.$invalid ||  
+								recognitionPeriodCutoff.$dirty &amp;&amp; recognitionPeriodCutoff.$invalid|| 
+								votingCutoff.$dirty &amp;&amp; votingCutoff.$invalid " />
+				</p>
+			</div>
+		</div>
+	</form>
+</div>

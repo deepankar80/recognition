@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8"/>
+  <title>Recognition Tool</title>
+  <meta name="robots" content="noindex"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/jquery-ui.min.css" />
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+  
+  <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css'/>
+  <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.min.css'/>
+  <link href="css/angular-toggle-switch-bootstrap-3.css" media="all" rel="stylesheet" type="text/css"/>
+  <!-- <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.2/angular-material.min.css"/> -->
+
+	<script src='js/jquery/jquery-1.11.1.min.js'></script>
+	<script src='js/jquery/jquery-ui-1.10.4.min.js'></script>
+	<link rel="stylesheet" href="css/jquery-ui.min.css" />
+
+  <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js'></script>
+  <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-sanitize.min.js'></script>
+  
+  
+  <script src='js/textAngular.min.js'></script>
+  
+	<script src="js/bootstrap/bootstrap.min.js"></script>
+	<script src="js/angularjs/angular.min.js"></script>
+	<script src="js/angularjs/angular-resource.min.js"></script>
+	<script src="js/angularjs/angular-route.min.js"></script>
+	<script src="js/bootstrap/ui-bootstrap-tpls-0.10.0.min.js"></script>
+	<script src="js/angularjs/angular-toggle-switch.min.js"></script>
+    
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.6.0.js" type="text/javascript"></script>
+   <script src="http://m-e-conroy.github.io/angular-dialog-service/javascripts/dialogs.min.js" type="text/javascript"></script> 
+    
+  <script src="js/feedback/feedback.js"></script>
+  <script src='js/jquery/jquery-1.11.1.min.js'></script>
+  <script src='js/jquery/jquery-ui-1.10.4.min.js'></script>
+
+<style type="text/css">
+.ta-editor {
+  min-height: 300px;
+  height: auto;
+  overflow: auto;
+  font-family: inherit;
+  font-size: 100%;
+}
+
+.modal { 
+	display: block;
+}
+
+/* Custom dialog/modal headers */
+
+.dialog-header-error { background-color: #d2322d; }
+.dialog-header-wait { background-color: #428bca; }
+.dialog-header-notify { background-color: #eeeeee; }
+.dialog-header-confirm { background-color: #333333; }
+	.dialog-header-error span, .dialog-header-error h4,
+	.dialog-header-wait span, .dialog-header-wait h4,
+	.dialog-header-confirm span, .dialog-header-confirm h4 { color: #ffffff; }
+
+
+</style>
+
+<script type="text/ng-template" id="brokerSelectTemplate.html">
+  <a>
+      <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
+  </a>
+</script>
+
+</head>
+
+<body ng-app="textAngularTest" ng-controller="wysiwygeditor" style="background-color: #FEFEFE ">
+
+<div ng-include="'partials/site-navigation.html'"></div>						
+						
+<br/>
+<br/>						
+<div class="container" id="detailsView" style="margin-left: 20px">
+		<ul class="nav nav-tabs" id="addTabs">
+			<li ng-class="{active : tabId == 0}" ng-show="!isGuestUser"><a ng-click="tabId = 0" data-target="#hotlineTab" data-toggle="tab" style="cursor: pointer; cursor: hand; font-size: small"><b class="glyphicon glyphicon-edit" style="font-size:small;"></b> Submit Recognition</a></li>
+			<li ng-class="{active : tabId == 4}" ng-show="!isGuestUser"><a ng-click="tabId = 4" data-target="#editTab" data-toggle="tab" style="cursor: pointer; cursor: hand; font-size: small"><b class="glyphicon glyphicon-log-in" style="font-size:small;"></b> My Recognitions</a></li>
+			<li ng-class="{active : tabId == 1}" ng-show="!isGuestUser"><a ng-click="tabId = 1" data-target="#fistTab" data-toggle="tab" style="cursor: pointer; cursor: hand; font-size: small"><b class="glyphicon glyphicon-thumbs-up" style="font-size:small;"></b> Review Recognitions</a></li>
+			<li ng-class="{active : tabId == 2}" ng-show="loggedInUser.recognitionTeamFlag == 'Y' &amp;&amp; isBeforeAndEqualCurrentDate(recognitionCutOff.votingCutoff)"><a ng-click="tabId = 2" data-target="#secondTab" data-toggle="tab" style="cursor: pointer; cursor: hand; font-size: small"><b class="glyphicon glyphicon-check" style="font-size:small;"></b> Select Winners</a></li>
+			<li ng-class="{active : tabId == 3}" ng-show="!isGuestUser"><a ng-click="tabId = 3" data-target="#winnerTab" data-toggle="tab" style="cursor: pointer; cursor: hand; font-size: small"><b class="glyphicon glyphicon-gift" style="font-size: small;"></b> Winners</a></li>
+			
+			<li ng-class="{active : tabId == 5}" style="padding-left: 150px" ng-show="loggedInUser.recognitionTeamFlag == 'Y'"><a ng-click="tabId = 5" data-target="#adminTab" data-toggle="tab" style="cursor: pointer; cursor: hand; font-size: small"><b class="glyphicon glyphicon-wrench" style="font-size: small;"></b> Admin</a></li>
+			<li ng-class="{active : tabId == 6}" ng-show="loggedInUser.recognitionTeamFlag == 'Y'"><a ng-click="tabId = 6; isNewUser = 'Y'" data-target="#adminTab" data-toggle="tab" style="cursor: pointer; cursor: hand; font-size: small"><b class="glyphicon glyphicon-plus-sign" style="font-size: small;"></b> Add User</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="hotlineTab" ng-show="tabId == 0" ng-class="{active : tabId == 0}">
+			
+			<div class="modal-dialog" style="width: 85%; margin-left: 00px; margin-top: -10px" >
+				<div class="modal-content">
+					<div class="modal-body">
+					
+				<div  class="container app" style="margin-left:40px">
+					<form name="sampleForm" class="form-horizontal" novalidate = "">
+						<div class="form-group" style="width: 80%; margin-left : -60px">
+							<p>
+								<label class="control-label" style="color: #D8D8D8;">Nominator</label>
+								
+								<div class="controls">
+									<input autocomplete="off" type="text" id="nominator" name="nominator" autofocus=""
+										ng-disabled="loggedInUser.recognitionTeamFlag != 'Y'"
+										ng-model="nominator" placeholder="Enter nominator"
+										typeahead-wait-ms="500"
+										typeahead="person as person.name for person in getPersons($viewValue)"
+										 typeahead-editable="true" typeahead-min-length="2"
+										class="form-control input-sm immediate-help" required="" typeahead-loading="loadingPersons"></input>
+										
+										<img ng-show="loadingPersons" width="20px" height="20px" src="images/loading.gif" />
+											
+									<div class="input-help">
+								      <h4>Please select nominator.</h4>
+								    </div>
+									
+									<!-- <div class="col-sm-5">
+										<a href="#addPersonModal" role="button" data-toggle="modal"
+											ng-click=""><span
+											class="glyphicon glyphicon-pencil toffset1"></span><span>Add Person</span></a>
+									</div> -->
+									<div ng-show="nominator.oracleId" class="input-sm">
+									<table style="width:100%" class="input-sm"><tr><td> Oracle Id : <b>{{nominator.oracleId}}</b></td>
+											   <td> Location : <b>{{nominator.officeLocation}}</b></td>
+											   <td width="50%"> Project : <b>{{nominator.projectDesc}}</b></td>
+											   <td width="5%"> <input type="button" class="btn btn-default btn-sm" value="edit" ng-click="isNewUser = 'N'; editUser(nominator)" /> </td></tr></table> </div>
+								</div>
+							</p>
+							<p>
+								<label class="control-label" style="color: #D8D8D8;">Nominee</label>
+								
+								<div class="controls">
+									
+									<input autocomplete="off" type="text" id="nominee" name="nominee" autofocus=""
+										ng-model="nominee" placeholder="Enter nominee"
+										typeahead-wait-ms="500"
+										typeahead="person as person.name for person in getPersons($viewValue)"
+										 typeahead-editable="true" typeahead-min-length="2"
+										class="form-control input-sm immediate-help" required="" typeahead-loading="loadingNominee"></input>
+										
+										<img ng-show="loadingNominee" width="20px" height="20px" src="images/loading.gif" />
+										
+								    <div class="input-help">
+								      <h4>Please enter nominee.</h4>
+								    </div>
+								    
+									<div ng-show="nominee.oracleId" class="input-sm">
+									<table style="width:100%" class="input-sm"><tr>
+											   <td> Oracle Id : <b>{{nominee.oracleId}}</b></td>
+											   <td> Location : <b>{{nominee.officeLocation}}</b></td>
+											   <td width="50%"> Project : <b>{{nominee.projectDesc}}</b></td></tr></table> </div>
+									
+									<span class="input-sm" style="color:red" ng-show="nominee.oracleId == null? false : nominee.oracleId == nominator.oracleId"> Sorry, You can not nominate yourself.</span>
+									
+								</div>
+							</p>
+							
+							<p>
+								<label class="control-label" style="color: #D8D8D8;">Category</label>
+								
+								<div class="controls">
+									<select type="category" class="form-control immediate-help input-sm" name="category" ng-model="category" required="" 
+									ng-options="typeaheadRestriction for typeaheadRestriction in typeaheadCategoriy" />
+								    
+								    
+									<span style="color:red" ng-show="sampleForm.category.$dirty &amp;&amp; sampleForm.category.$invalid">
+									<span ng-show="sampleForm.category.$error.required">Category is required.</span>
+									</span>
+									
+								</div>
+							</p>
+							
+							<p>
+								<label class="control-label"></label>
+								<div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent" ta-disabled='disabled' ></div>
+							</p>
+							
+							<p align="right">
+								<input type="button" class="btn btn-primary" value="Submit" ng-click="submit()"
+								ng-disabled="recognitionCutOff == null &amp;&amp; sampleForm.nominator.$dirty &amp;&amp; sampleForm.nominator.$invalid ||  
+								sampleForm.nominee.$dirty &amp;&amp; sampleForm.nominee.$invalid ||  
+								sampleForm.category.$dirty &amp;&amp; sampleForm.category.$invalid|| sampleForm.$invalid || nominee.oracleId == nominator.oracleId" />
+							</p>
+						</div>
+					</form> 
+				</div>
+				</div>
+			</div>
+			</div>
+				<div ng-include="'partials/category_desc.html'"></div>
+			
+			</div>
+			<div class="tab-pane" id="fistTab" ng-show="tabId == 1" ng-class="{active : tabId == 1}">
+			
+				<div align="right" style="margin-top: -20px; width: 108%"><input type="button" class="btn btn-info" value="Submit Votes" ng-click="submitVotes()" /></div>
+			
+			
+			
+			                	<br/>  
+			<font ng-show="recognitionCutOff != null" color="gray" class="input-sm" style="margin-left: 20px"> Voting is allowed after <b>{{recognitionCutOff.recognitionPeriodCutoff | date:'dd-MMM-yyyy'}} till {{recognitionCutOff.votingCutoff | date:'dd-MMM-yyyy'}}</b> </font>
+			<div class="container-fluid" >
+
+			    <div class="row input-sm">
+			<div class="modal-dialog" style="width: 110%; margin-top: -35px; min-height: 50% " >
+				<div class="modal-content">
+					<div class="modal-body">
+			      <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 thumbnail"> -->
+			      	  <div ng-show="!!!recognitions.length" class="alert alert-info">
+							<p>
+								<span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;No Nomination submitted.
+							</p>
+						</div>
+			      	  
+			          <tabset >
+			            <tab 
+			              ng-repeat="tab in recognitions | orderBy : 'category'"
+			              ng-attr-id="{{tab.category}}"
+			              heading="{{tab.category}}"
+			              
+			              select="selectTab(tab.category)">
+			                <div class="tab-text" style="margin-left: -15px; min-height: 500px">
+			                
+								<img ng-show="loadingView" style="margin-left: 45%; margin-top : 10%" width="50px" height="50px" src="images/loading.gif" />
+								<table ng-show="tab.recognitions.length" class="table table-bordered table-condensed input-sm" style="width:78%">
+									<tr ng-repeat="recognition in tab.recognitions | orderBy : 'nominee.name' ">
+										<td>
+										<table class="input-sm" style="width:100%; background-color: #F0F0F0 ">
+										<tr><td width="30%">
+												&nbsp;&nbsp;Nominator : <b>{{recognition.nominator.name}} </b> ({{recognition.nominator.oracleId}})</td>
+											<td width="30%">	
+												Nominee : <b>{{recognition.nominee.name}} </b> ({{recognition.nominee.oracleId}})</td>
+											<td width="35%">	
+												Category : <b>{{recognition.recognitionCategory}}</b>
+											</td>
+											<td>
+												<toggle-switch ng-show="loggedInUser.recognitionTeamFlag == 'Y' &amp;&amp; isBeforeAndEqualCurrentDate(recognitionCutOff.recognitionPeriodCutoff) &amp;&amp; !isBeforeAndEqualCurrentDate(recognitionCutOff.votingCutoff)"
+									              ng-model="votes[recognition.nominationId]"
+									              on-label="Yes" 
+									              off-label="No" >
+									              
+									            </toggle-switch>
+											</td></tr>
+										</table>
+										
+										<p ng-bind-html="recognition.citation"/></td>
+									</tr>
+								</table>
+			                
+			                
+			                </div>
+										
+			            </tab>
+			          </tabset>
+			 </div>
+			                </div>
+			                </div>
+			        <!-- </div> --> <!-- /col -->
+			    </div> <!-- /row -->
+			
+			  </div><!-- container -->
+			
+			
+			
+			</div>
+			
+			<div class="tab-pane" id="secondTab" ng-show="tabId == 2" ng-class="{active : tabId == 2}">
+			
+			<div align="right" style="margin-top: -20px; width: 108%"><input type="button" class="btn btn-info" value="Submit Winners" ng-click="submitWinners()" /></div>
+			<br/>
+			
+			<font ng-show="recognitionCutOff != null" color="gray" class="input-sm" style="margin-left: 20px"> Winner selection last date <b>{{recognitionCutOff.recognitionPeriodEnd | date:'dd-MMM-yyyy'}}</b> </font>
+			<div class="container-fluid" >
+
+			    <div class="row input-sm">
+			<div class="modal-dialog" style="width: 110%; margin-top: -35px" >
+				<div class="modal-content">
+					<div class="modal-body">
+					
+					<div ng-show="!!!recognitions.length" class="alert alert-info">
+						<p>
+							<span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;No Nomination submitted
+						</p>
+					</div>
+					
+			      <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 thumbnail"> -->
+			          <tabset>
+			            <tab 
+			              ng-repeat="tab in recognitions | orderBy : 'category'"
+			              ng-attr-id="{{tab.category}}"
+			              heading="{{tab.category}}"
+			              
+			              select="selectTab(tab.category)">
+			                <div class="tab-text" style="min-height: 500px">
+			                
+								<img ng-show="loadingView" style="margin-left: 45%; margin-top : 10%" width="50px" height="50px" src="images/loading.gif" />
+								<table ng-show="tab.recognitions.length" class="table table-bordered table-condensed input-sm" style="width:78%">
+									<tr ng-repeat="recognition in tab.recognitions | orderBy : 'numberOfvotes' : true">
+										<td>
+										<table class="input-sm" style="width:100%; background-color: #F0F0F0 ">
+										<tr><td width="29%">
+												&nbsp;&nbsp;Nominator : <b>{{recognition.nominator.name}} </b> ({{recognition.nominator.oracleId}})</td>
+											<td width="29%">	
+												Nominee : <b>{{recognition.nominee.name}} </b> ({{recognition.nominee.oracleId}})</td>
+											<td width="27%">	
+												Category : <b>{{recognition.recognitionCategory}}</b>
+											</td>
+											
+											<td align="right">votes : &nbsp;</td>
+											<td>
+												<font style="color:blue; font-size: xx-large;" > {{recognition.numberOfvotes}} </font>
+											</td>
+											
+											<td align="right">&nbsp;&nbsp;Score : &nbsp;</td>
+											<td>
+												<font style="color:gray; font-size: x-large;" > {{recognition.prefernenceCount}} </font>
+											</td>
+											<td width="5%" align="right">
+												<input ng-model="winners[recognition.nominationId]" value="{{winners[recognition.nominationId]}}" type="checkbox" style="width: 20px; height: 20px; cursor: pointer; color: blue;" />
+											</td></tr>
+										</table>
+										
+										
+										<p ng-bind-html="recognition.citation"/></td>
+									</tr>
+								</table>
+								
+								</div>
+			            </tab>
+			          </tabset>
+			</div>
+			                </div>
+			                </div>
+			        <!-- </div> --> <!-- /col -->
+			    </div> <!-- /row -->
+			
+			  </div><!-- container -->
+			</div>
+			
+			<div class="tab-pane" id="winnerTab" ng-show="tabId == 3" ng-class="{active : tabId == 3}">
+			
+			<br/>
+			
+			<font ng-show="recognitionCutOff != null" color="gray" class="input-sm" style="margin-left: 20px"> Current cycle winners will be available after <b>{{recognitionCutOff.recognitionPeriodEnd | date:'dd-MMM-yyyy'}}</b> </font>
+			<div class="container-fluid" >
+
+			    <div class="row input-sm">
+			<div class="modal-dialog" style="width: 110%; margin-top: -35px" >
+				<div class="modal-content">
+					<div class="modal-body">
+			      <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 thumbnail"> -->
+			          
+								<img ng-show="loadingView" style="margin-left: 45%; margin-top : 10%" width="50px" height="50px" src="images/loading.gif" />
+								<table ng-show="allWinners.length" class="table table-bordered table-condensed input-sm" style="width:100%">
+									<tr ng-repeat="winner in allWinners | orderBy : 'nomination.recognitionCategory'">
+										<td>
+										<table class="input-sm" style="width:100%; background-color: #F0F0F0 ">
+										<tr><td width="29%">
+												&nbsp;&nbsp;Nominator : <b>{{winner.nomination.nominator.name}} </b> ({{winner.nomination.nominator.oracleId}})</td>
+											<td width="29%">	
+												Nominee : <b>{{winner.nomination.nominee.name}} </b> ({{winner.nomination.nominee.oracleId}})</td>
+											<td width="27%">	
+												Category : <b>{{winner.nomination.recognitionCategory}}</b>
+											</td>
+											
+											</tr>
+										</table>
+										
+										
+										<p ng-bind-html="winner.nomination.citation"/></td>
+									</tr>
+								</table>
+								
+								<div ng-show="!!!allWinners.length" class="alert alert-info">
+									<p>
+										<span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;No Winner available for perivious cycle.
+									</p>
+								</div>
+								</div>
+			           
+			                </div>
+			                </div>
+			        <!-- </div> --> <!-- /col -->
+			    </div> <!-- /row -->
+			
+			  </div><!-- container -->
+			</div>
+			
+			<div class="tab-pane" id="editTab" ng-show="tabId == 4" ng-class="{active : tabId == 4}">
+			
+			<br/>
+			
+			
+			<div class="container-fluid" >
+
+			    <div class="row input-sm">
+			<div class="modal-dialog" style="width: 110%; margin-top: -35px" >
+				<div class="modal-content">
+					<div class="modal-body">
+			      <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 thumbnail"> -->
+			          
+								<img ng-show="loadingView" style="margin-left: 45%; margin-top : 10%" width="50px" height="50px" src="images/loading.gif" />
+								<table ng-show="myNominations.length" class="table table-bordered table-condensed input-sm" style="width:100%">
+									<tr ng-repeat="nomination in myNominations | orderBy : 'nominationId' : true">
+										<td>
+										<table class="input-sm" style="width:100%; background-color: #F0F0F0 ">
+										<tr><td width="29%">
+												&nbsp;&nbsp;Nominator : <b>{{nomination.nominator.name}} </b> ({{nomination.nominator.oracleId}})</td>
+											<td width="29%">	
+												Nominee : <b>{{nomination.nominee.name}} </b> ({{nomination.nominee.oracleId}})</td>
+											<td width="27%">	
+												Category : <b>{{nomination.recognitionCategory}}</b>
+											</td>
+											<td width="5%"><input type="button" ng-show="nomination.recognitionPeriod != null &amp;&amp; periodId == nomination.recognitionPeriod" class="btn btn-default btn-sm" value="edit" ng-click="edit(nomination)" /> </td>
+											</tr>
+										</table>
+										
+										
+										<p ng-bind-html="nomination.citation"/></td>
+									</tr>
+								</table>
+								
+								<div ng-show="!!!myNominations.length" class="alert alert-info">
+									<p>
+										<span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;No nomination submitted
+									</p>
+								</div>
+								</div>
+			           			
+			                </div>
+			                </div>
+			        <!-- </div> --> <!-- /col -->
+			    </div> <!-- /row -->
+			
+			  </div><!-- container -->
+			</div>
+			
+			
+			<div class="tab-pane" id="adminTab" ng-show="tabId == 5" ng-class="{active : tabId == 5}">
+				<br/>	
+				<div  class="container app" style="margin-left:40px" align="center">
+					<form name="adminForm" class="form-horizontal" novalidate = "">
+						<div class="form-group" style="width: 80%; margin-left : -60px">
+							
+							<div class="col-sm-10">
+								<div class="form-group">
+									<label class="control-label col-sm-3 input-sm">Recognition Period desc</label>
+									
+									<div class="col-sm-7">
+										
+										<input autocomplete="off" type="text" id="recognitionDescription" name="recognitionDescription" autofocus=""
+											ng-model="recognitionDescription" placeholder="Enter Nomination Period"
+											
+											class="form-control input-sm immediate-help" required=""></input>
+										
+									</div>
+								</div>
+							</div>
+							
+							
+							<div class="col-sm-10">
+								<div class="form-group">
+									<label class="col-sm-3 control-label input-sm" >Period start date</label>
+									<div class="col-sm-7">
+										<input type="text" class="form-control input-sm"
+											datepicker-popup="MM/dd/yyyy"
+											ng-model="recognitionPeriodStart" is-open="opened1"
+											min-date="'2012-06-22'" max-date="'2015-06-22'" name="recognitionPeriodStart"
+											id="recognitionPeriodStart" close-text="Close" required=""/> 
+									</div>
+								</div>
+							</div>	
+							
+							<div class="col-sm-10">
+								<div class="form-group">
+									<label class="col-sm-3 control-label input-sm" >Period end date</label>
+									<div class="col-sm-7">
+										<input type="text" class="form-control input-sm"
+											datepicker-popup="MM/dd/yyyy"
+											ng-model="recognitionPeriodEnd" is-open="opened2"
+											min-date="'2012-06-22'" max-date="'2015-06-22'" name="recognitionPeriodEnd"
+											id="recognitionPeriodEnd" close-text="Close" required=""/> 
+									</div>
+								</div>
+							</div>	
+							
+							<div class="col-sm-10">
+								<div class="form-group">
+									<label class="col-sm-3 control-label input-sm" >Submission Cut off date</label>
+									<div class="col-sm-7">
+										<input type="text" class="form-control input-sm"
+											datepicker-popup="MM/dd/yyyy"
+											ng-model="recognitionPeriodCutoff" is-open="opened3"
+											min-date="'2012-06-22'" max-date="'2015-06-22'" name="recognitionPeriodCutoff"
+											id="recognitionPeriodCutoff" close-text="Close" required=""/> 
+									</div>
+								</div>
+							</div>	
+							
+							<div class="col-sm-10">
+								<div class="form-group">
+									<label class="col-sm-3 control-label input-sm" >Voting Cut off date</label>
+									<div class="col-sm-7">
+										<input type="text" class="form-control input-sm"
+											datepicker-popup="MM/dd/yyyy"
+											ng-model="votingCutoff" is-open="opened4"
+											min-date="'2012-06-22'" max-date="'2015-06-22'" name="votingCutoff"
+											id="votingCutoff" close-text="Close" required=""/> 
+									</div>
+								</div>
+							</div>	
+							
+							<div class="col-sm-6">
+								<p align="right">
+									<input type="button" class="btn btn-primary" value="Submit" ng-click="updateCutoff()"
+									ng-disabled="recognitionPeriodStart.$dirty &amp;&amp; recognitionPeriodStart.$invalid ||  
+								recognitionPeriodEnd.$dirty &amp;&amp; recognitionPeriodEnd.$invalid ||  
+								recognitionPeriodCutoff.$dirty &amp;&amp; recognitionPeriodCutoff.$invalid|| 
+								votingCutoff.$dirty &amp;&amp; votingCutoff.$invalid "
+									 />
+								</p>
+							</div>
+						</div>
+					</form> 
+				</div>
+			</div>
+			
+			<div class="tab-pane" id="addUserTab" ng-show="tabId == 6" ng-class="{active : tabId == 6}">
+				<br/>	
+				<div ng-include="'partials/addUser.html'"></div>
+			</div>
+			
+			
+		</div>
+	</div>
+	
+	
+</body>
+
+</html>

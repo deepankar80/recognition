@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<script src="js/angularjs/1.2.26/angular.min.js"></script>
+	<script src="js/script.js"></script>
+	<link rel="stylesheet" href="css/style.css" />
+
+<style type="text/css">
+
+/************
+This is just what's important for the functionality of the menu. Pure styling choices can be found lower down.
+***********/
+
+@mixin vendor($name, $argument) {
+  #{$name}: $argument;
+  -webkit-#{$name}: $argument;
+  -ms-#{$name}: $argument;
+  -moz-#{$name}: $argument;
+  -o-#{$name}: $argument;
+}
+
+body {
+  box-sizing: border-box;
+  display: flex;
+  padding: 0;
+  margin: 0;
+}
+
+.menu {
+  width: 225px;
+  margin: 0;
+  list-display: none;
+  z-index: 6;
+  
+  .menu-tabs {
+    input[type='radio']{
+      display: none;
+    }
+
+    label {
+      width: 50px;
+      height: 90px;
+      margin-left: 225px;
+      display: block;
+      -webkit-trasition: all 0.3s linear;
+      transition: all 0.3s linear;
+      
+      div {
+        padding-left: 30px;
+        transform: rotate(90deg);
+
+      }
+    }
+    
+    label[for='tab1']{
+      div {
+        padding-left: 20px;
+      }
+    }
+  }
+
+  .tab-content {
+    position: fixed;
+    width: 180px;
+    left: -225px;
+    top: 0;
+    opacity: 0;
+    @include vendor(transition, all 0.3s ease-in-out);
+  }
+  
+  #tab1:checked ~ #tab-content1,
+  #tab2:checked ~ #tab-content2,
+  #tab3:checked ~ #tab-content3 {
+    left: 10px;
+    opacity: 1;
+  }
+}
+
+
+/******************
+Extra styling choices
+******************/
+$light-grey: #ccc;
+$light-blue: #3498db;
+
+.menu {
+  label {
+      background-color: white;
+      color: $light-grey;
+      box-shadow: inset 3px 4px 5px $light-grey;
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+      text-transform: uppercase;
+      font-size: 1.4rem;
+      font-family: sans-serif;
+      font-weight: 300;
+      line-height: 2;
+      text-align: center;
+      cursor: pointer;
+    
+      :hover {
+        color: $light-blue;
+      }
+    
+      
+  }
+  
+  .tab-content {
+    font-size: 1rem;
+    font-family: sans-serif;
+    padding: 0 10px;
+  }
+  
+  [id^='tab']:checked + label {
+    color: $light-blue;
+    box-shadow: 3.5px -3px 5px $light-grey;
+  }
+}
+
+.map {
+  width: calc(100vw);
+  z-index: 0;
+  position: fixed;
+  left: 225px;
+  background-image: url('http://www.cartagram.com/wp-content/uploads/2013/01/blog_watercolor_Boston.jpg');
+  background-size: cover;
+  height: 100vh;
+  margin: 0;
+  box-shadow: inset 2px 0 10px $light-grey;
+}
+
+
+
+</style>
+
+
+</head>
+    
+<body>
+<div class='menu menu-show'>
+  <div class='menu-tabs'>
+    <input type='radio' name='tabs' id='tab1' checked='checked'/>
+      <label for='tab1'>
+        <div>Here</div>
+      </label>
+    <div id='tab-content1' class='tab-content'><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec consectetur nisi, non scelerisque justo. Aenean sed ultrices sem. Pellentesque non efficitur quam. Praesent nec odio egestas, aliquet nulla id, dapibus magna. Integer eu eros enim. Donec quis sapien vel metus ullamcorper dictum sit amet et mauris. Cras quam urna, tincidunt et ullamcorper tempus, condimentum eu nunc. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum felis ex, tempor ac fringilla vitae, euismod ornare ante.</p></div>
+    
+    <input type='radio' name='tabs' id='tab2'/>
+    <label for='tab2'>
+      <div>We</div>
+    </label>
+    <div id='tab-content2' class='tab-content'><p>Vestibulum et imperdiet ante, a dapibus ante. Quisque eu cursus eros, eget lobortis arcu. Fusce luctus odio ut felis dapibus, at molestie arcu maximus. Proin quis leo consequat, ultrices tortor a, faucibus ipsum. Donec dapibus nibh vitae elit tempor dapibus. Nulla feugiat justo sit amet quam tincidunt ultricies et in nulla. Morbi porta turpis ac diam lacinia vulputate. Sed eros nisi, tempus vel turpis a, sodales suscipit nunc. Etiam pulvinar iaculis felis vitae rutrum.</p></div>
+    
+    <input type='radio' name='tabs' id='tab3'/>
+    <label for='tab3'>
+      <div>Go</div>
+    </label>
+    <div id='tab-content3' class='tab-content'><p>Some more rambly nonsense about how baseball was yesterday gardening harvard with yes men just like you think it should be.</p></div>
+    
+  </div>
+    
+    
+</div>
+<div class='map'></div>
+</body>
+</html>
