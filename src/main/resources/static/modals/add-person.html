@@ -1,0 +1,59 @@
+<script type="text/ng-template" id="brokerSelectTemplate.html">
+  <a>
+      <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
+  </a>
+</script>
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header  wmc_light_header">
+			<button type="button" class="close  glyphicon glyphicon-remove" data-dismiss="modal" aria-hidden="true"></button>
+			<h3 class="modal-title" id="myModalLabel">Information Barrier List</h3>
+		</div>
+		<div class="modal-body">
+			<form name="ibPersonDetailsForm" class="form-horizontal" role="form" novalidate>
+				<fieldset>
+
+					<div class="col-lg-12">
+						<div class="form-group" ng-class="{ 'has-error' : invalidIbPersonSelected}">
+							<label for="ibPersonName">Name</label> <input autocomplete="off" type="text" autofocus id="ibPersonName" name="ibPersonName" ng-keydown='resetBrokerWarning(selectedSeller)'
+							ng-model="selectedIbPerson" placeholder="Enter first or last name"
+								typeahead-wait-ms="500"
+								typeahead="person as person.ntLogin + ' - ' +person.firstNm + ' ' + person.lastNm + ' - ' + person.personTitle for person in getPersons($viewValue)"
+								 typeahead-editable="true" typeahead-min-length="2"
+								typeahead-loading="loadingPersons" typeahead-on-select="selectIbPerson($item, $model, $label); selectedIbPerson = '';" class="form-control input-sm"></input>
+                            <i ng-show="loadingPersons" class="glyphicon glyphicon-refresh"></i> <span class="help-block"
+								ng-show="invalidDealerSelected">Enter a valid Person. Person name should be more than 2 characters and less than 50 characters long.</span>
+							<button type="button" class="btn btn-default btn-xs" ng-click="addIbPerson(selectedIbPerson); selectedIbPerson = '';">
+								<span class="glyphicon glyphicon-plus"></span> add
+							</button>
+							</br> </br>
+							<div class="panel panel-info">
+								<div class="panel-heading">
+									<h3 class="panel-title">
+										<b>Existing Persons</b>
+									</h3>
+								</div>
+								<div class="panel-body">
+									<table class="table table-condensed" style="width: 100%">
+										<tr ng-repeat="person in existingIbPersons">
+											<td>
+												<button type="button" class="btn btn-default btn-xs" ng-click='removeIbPerson(person)'>
+													<span class="glyphicon glyphicon-trash"></span>
+												</button> <span ng-show="person.id">{{ person.ntLogin }} - {{ person.firstNm }} - {{ person.lastNm }} - {{ person.personTitle }}</span>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+		<div class='modal-footer'>
+			<button type='button' class="btn btn-primary" data-dismiss="modal">Cancel</button>
+			<button type='submit' class="btn btn-primary" data-dismiss="modal" ng-click='saveIbPersons()'>Save</button>
+		</div>
+	</div>
+</div>

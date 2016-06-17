@@ -1,0 +1,18 @@
+<div class="navbar navbar-fixed-top" role="navigation">
+	<div class="container-fluid navbar-inverse " style="background-color : #00008B;color: white">
+		<div class="navbar-header ">
+			<div class="dropdown-toggle input-xl" style="color: F2F2F2"> <img src="https://www.sapientglobalmarkets.com/images/sapient-logo.svg" height="40px" width="40px"/> Recognition Tool</div>
+		</div>
+		
+		<div class="navbar-header" data-toggle="dropdown" align="center" style="vertical-align: bottom;width: 70%">
+				<div ng-show="recognitionCutOff != null" class="dropdown-toggle input-lg" style="color:#D8D8D8">{{recognitionCutOff.recognitionDescription}}</div>
+				<div ng-show="recognitionCutOff == null" class="dropdown-toggle input-lg" style="color:#D8D8D8">No Nomination Cycle Created</div>
+		</div>
+		
+		<div class="dropdown-toggle input-sm" data-toggle="dropdown" align="right" style="vertical-align: bottom; color: #D8D8D8">
+				<b class="glyphicon glyphicon-user"></b>
+				{{isGuestUser ? 'Guest' : loggedInUser.name}}
+				<div ng-show="recognitionCutOff != null">Submission last date <b style="color: white">{{recognitionCutOff.recognitionPeriodCutoff | date:'dd MMM yyyy'}}</b></div>
+		</div>
+	</div>
+</div>
