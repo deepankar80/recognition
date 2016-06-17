@@ -1,1 +1,0 @@
-Deprecated to use version 2.0 of cal
