@@ -88,18 +88,18 @@
 							</div>
 						</div>
 						
-						<!-- <div class="col-sm-11">
+						<div class="col-sm-11" ng-show="isGuestUser">
 							<div class="form-group">
-								<label class="control-label col-sm-3 input-sm">Account</label>
+								<label class="control-label col-sm-4 input-sm">Account</label>
 
-								<div class="col-sm-9">
+								<div class="col-sm-8">
 									<select id="editUser.account" class="form-control immediate-help input-sm" name="editUser.account" 
 									ng-model="editUser.account" required="" 
 									ng-options="account as account.value for account in typeaheadAccounts track by account.id" />
 
 								</div>
 							</div>
-						</div> -->
+						</div> 
 						<div class="col-sm-6">
 							<p align="right">
 								<input type="button" class="btn btn-primary" value="submit"

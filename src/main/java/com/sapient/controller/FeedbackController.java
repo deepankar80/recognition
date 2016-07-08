@@ -2,20 +2,27 @@ package com.sapient.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.sapient.excel.ExcelBuilder;
 import com.sapient.model.NominationForm;
 import com.sapient.model.RecognitionByCategoryDto;
 import com.sapient.repository.Member;
@@ -182,7 +189,7 @@ public class FeedbackController {
 					new ArrayList<Nomination>(),
 					new ArrayList<Integer>(),
 					new ArrayList<Integer>(),
-					new ArrayList<Winners>(),
+					this.recognitionService.getWinners(feedbackFormData.getSubmittedBy()),
 					this.recognitionService.getMyRecognition(feedbackFormData.getSubmittedBy()),
 					nominationPeriod);
 		}
@@ -195,4 +202,24 @@ public class FeedbackController {
 				this.recognitionService.getMyRecognition(feedbackFormData.getSubmittedBy()),
 				nominationPeriod);
 	}
+	
+	@RequestMapping(value = "/downloadExcel/{submittedBy}", method = RequestMethod.GET, produces = {"application/ms-excel"})
+    public ModelAndView downloadExcel(@PathVariable("submittedBy") int submittedBy , HttpServletRequest request, HttpServletResponse response) {
+			LOGGER.info("load details ");
+			
+			/*RecognitionCutOff nominationPeriod = this.recognitionService.getNominationPeriod(submittedBy);
+			
+			if(nominationPeriod == null) {
+				return null;
+			}*/
+			List<Winners> allRecognition = this.recognitionService.getWinners(submittedBy);
+ 
+        // return a view which will be resolved by an excel view resolver
+        //return new ModelAndView("excelBuilder", "recognitions", allRecognition);
+			Map<String, Object> model = new HashMap<String, Object>();
+			model.put("recognitions", allRecognition);
+	        response.setContentType( "application/ms-excel" );
+	        response.setHeader( "Content-disposition", "attachment; filename=myfile.xls" );         
+	        return new ModelAndView(new ExcelBuilder(), model);
+    }
 }

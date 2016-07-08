@@ -23,7 +23,7 @@ public interface WinnersRepository extends JpaRepository<Winners, Integer> {
 	@Query(value = "select * from winner w where w.period_id = "
 			+ " (select max(p.period_id) from recognition_cutoff_tbl p, member m "
 			+ "					where oracle_Id = :accountId "
-			+ "                        and m.account_id = m.account_id "
+			+ "                        and p.account_id = m.account_id "
 			+ "						and p.Recognition_period_end_ts < now()) "
 			, nativeQuery = true)
 	public List<Winners> getPreviousCycleWinner(@Param("accountId") Integer accountId);

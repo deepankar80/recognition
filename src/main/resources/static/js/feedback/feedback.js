@@ -4,13 +4,13 @@ function wysiwygeditor($scope, $http, $log, $window, $location,$dialogs) {
 	$scope.orightml = '<h2>Try me!</h2><p>textAngular is a super cool WYSIWYG Text Editor directive for AngularJS</p><p><b>Features:</b></p><ol><li>Automatic Seamless Two-Way-Binding</li><li>Super Easy <b>Theming</b> Options</li><li style="color: green;">Simple Editor Instance Creation</li><li>Safely Parses Html for Custom Toolbar Icons</li><li class="text-danger">Doesn&apos;t Use an iFrame</li><li>Works with Firefox, Chrome, and IE8+</li></ol><p><b>Code at GitHub:</b> <a href="https://github.com/fraywing/textAngular">Here</a> </p>';
 	$scope.htmlcontent = '';
 	$scope.disabled = false;
-	$scope.typeaheadCategoriy = ['Client Focussed Delivery (CFD)', 'People Growth', 'Relationship', 'Openness', 'Leadership', 'Fresh Face'];
+	$scope.typeaheadCategoriy = ['Client Focussed Delivery (CFD)', 'Creativity', 'People Growth', 'Relationship', 'Openness', 'Leadership', 'Fresh Face', 'Fundoo'];
 	$scope.typeaheadAccounts = [{
-							'id'    : '1',
+							'id'    : '102',
 							'value' : 'Wellington'
 						},
 						{
-							'id'    : '2',
+							'id'    : '101',
 							'value' : 'Goldman'
 						}
 					  ];
@@ -94,7 +94,7 @@ function wysiwygeditor($scope, $http, $log, $window, $location,$dialogs) {
 				'officeLocation' : $scope.editUser.location,
 				'oracleId' : $scope.editUser.oracleId,
 				'ntLogin' : $scope.editUser.ntLogin,
-				'accountId': $scope.loggedInUser.accountId,
+				'accountId': $scope.editUser.account.id,
 				'recognitionTeamFlag' : $scope.editUser.recognitionTeamFlg
 		};
 		
@@ -106,8 +106,10 @@ function wysiwygeditor($scope, $http, $log, $window, $location,$dialogs) {
 		    },
 		    'data' : $scope.formData
 		}).success(function(data) {
+			$scope.loadLoggedInUser();
 			alert("Member Saved Successfully.");
-			$window.location.href = '/sapient';
+			//$window.location.href = '/sapient';
+			$window.location.reload();
 		});
 	}
 	
@@ -229,7 +231,7 @@ function wysiwygeditor($scope, $http, $log, $window, $location,$dialogs) {
 		$scope.editUser.location = reg.officeLocation;
 		$scope.editUser.oracleId = reg.oracleId;
 		$scope.editUser.recognitionTeamFlg = reg.recognitionTeamFlag;
-		//$scope.editUser.account = {'id' : reg.accountId, 'value' : 'Wellington'};
+		$scope.editUser.account = {"id" : $scope.loggedInUser.accountId};
 		
 		var WinNetwork = new ActiveXObject("WScript.Network");
 		$scope.editUser.ntLogin = WinNetwork.UserName;
@@ -277,10 +279,43 @@ function wysiwygeditor($scope, $http, $log, $window, $location,$dialogs) {
 		    },
 		    'data' : $scope.formData
 		}).success(function(data) {
-			alert("Saved Successfully.");
+			alert("Saved Successfully. \n\nPlease add the citation in PeoplePortal.");
+			
 			$window.location.href = '/sapient#editTab';
 		});
 	};
+	
+	$scope.openOutlook = function() {
+		try {
+
+		    //get outlook and create new email
+		    var outlook = new ActiveXObject('Outlook.Application');
+		    var email = outlook.CreateItem(0);
+
+		    //add some recipients
+		    email.Recipients.Add('user1@company.com').Type = 1; //1=To
+		    email.Recipients.Add('user2@company.com').Type = 2; //2=CC
+
+		    //subject and attachments
+		    email.Subject = 'A Subject';
+		    //email.Attachments.Add('URL_TO_FILE', 1); //1=Add by value so outlook downloads the file from the url
+
+		    // display the email (this will make the signature load so it can be extracted)
+		    email.Display();
+
+		    //use a regular expression to extract the html before and after the signature
+		    var signatureExtractionExpression = new RegExp('/[^~]*(<BODY[^>]*>)([^~]*</BODY>)[^~]*/', 'i');
+		    signatureExtractionExpression.exec(email.HTMLBody);
+		    var beforeSignature = RegExp.$1;
+		    var signature = RegExp.$2;
+
+		    //set the html body of the email
+		    email.HTMLBody = beforeSignature + '<h1>Our Custom Body</h1>' + signature;
+
+		} catch(ex) {
+		    //something went wrong
+		}
+	}
 	
 	$scope.recognitions;
 	
@@ -301,6 +336,10 @@ function wysiwygeditor($scope, $http, $log, $window, $location,$dialogs) {
 				
 				if($scope.isGuestUser) {
 					$scope.tabId = 6;
+					$scope.isNewUser = 'Y';
+					
+					var WinNetwork = new ActiveXObject("WScript.Network");
+					$scope.editUser.ntLogin = WinNetwork.UserName;
 				} else {
 					//$scope.editUser.account = $scope.typeaheadAccounts[$scope.loggedInUser.accountId - 1];
 					$scope.load();
@@ -351,5 +390,6 @@ function wysiwygeditor($scope, $http, $log, $window, $location,$dialogs) {
 		
 	};
 	
+	//$scope.openOutlook();
 	$scope.loadLoggedInUser();
 };

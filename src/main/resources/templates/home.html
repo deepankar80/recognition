@@ -89,7 +89,7 @@
 			<li ng-class="{active : tabId == 3}" ng-show="!isGuestUser"><a ng-click="tabId = 3" data-target="#winnerTab" data-toggle="tab" style="cursor: pointer; cursor: hand; font-size: small"><b class="glyphicon glyphicon-gift" style="font-size: small;"></b> Winners</a></li>
 			
 			<li ng-class="{active : tabId == 5}" style="padding-left: 150px" ng-show="loggedInUser.recognitionTeamFlag == 'Y'"><a ng-click="tabId = 5" data-target="#adminTab" data-toggle="tab" style="cursor: pointer; cursor: hand; font-size: small"><b class="glyphicon glyphicon-wrench" style="font-size: small;"></b> Admin</a></li>
-			<li ng-class="{active : tabId == 6}" ng-show="loggedInUser.recognitionTeamFlag == 'Y'"><a ng-click="tabId = 6; isNewUser = 'Y'" data-target="#adminTab" data-toggle="tab" style="cursor: pointer; cursor: hand; font-size: small"><b class="glyphicon glyphicon-plus-sign" style="font-size: small;"></b> Add User</a></li>
+			<li ng-class="{active : tabId == 6}" ng-show="loggedInUser.recognitionTeamFlag == 'Y' || isGuestUser"><a ng-click="tabId = 6; isNewUser = 'Y'" data-target="#adminTab" data-toggle="tab" style="cursor: pointer; cursor: hand; font-size: small"><b class="glyphicon glyphicon-plus-sign" style="font-size: small;"></b> Add User</a></li>
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="hotlineTab" ng-show="tabId == 0" ng-class="{active : tabId == 0}">
@@ -197,7 +197,7 @@
 			</div>
 			<div class="tab-pane" id="fistTab" ng-show="tabId == 1" ng-class="{active : tabId == 1}">
 			
-				<div align="right" style="margin-top: -20px; width: 108%"><input type="button" class="btn btn-info" value="Submit Votes" ng-click="submitVotes()" /></div>
+				<div align="right" style="margin-top: -20px; width: 108%" ng-show="loggedInUser.recognitionTeamFlag == 'Y' &amp;&amp; isBeforeAndEqualCurrentDate(recognitionCutOff.recognitionPeriodCutoff) &amp;&amp; !isBeforeAndEqualCurrentDate(recognitionCutOff.votingCutoff)"><input type="button" class="btn btn-info" value="Submit Votes" ng-click="submitVotes()" /></div>
 			
 			
 			
@@ -377,7 +377,7 @@
 								
 								<div ng-show="!!!allWinners.length" class="alert alert-info">
 									<p>
-										<span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;No Winner available for perivious cycle.
+										<span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;No Winner available for previous cycle.
 									</p>
 								</div>
 								</div>
@@ -441,7 +441,9 @@
 			
 			
 			<div class="tab-pane" id="adminTab" ng-show="tabId == 5" ng-class="{active : tabId == 5}">
-				<br/>	
+				<br/>
+					<a class="btn btn-info" href="feedback/downloadExcel/{{loggedInUser.oracleId}}">Export winners</a>	
+				<br/>
 				<div  class="container app" style="margin-left:40px" align="center">
 					<form name="adminForm" class="form-horizontal" novalidate = "">
 						<div class="form-group" style="width: 80%; margin-left : -60px">
