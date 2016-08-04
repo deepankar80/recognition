@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sapient.excel.ExcelBuilder;
+import com.sapient.model.JMSMessage;
 import com.sapient.model.NominationForm;
 import com.sapient.model.RecognitionByCategoryDto;
 import com.sapient.repository.Member;
@@ -31,6 +32,7 @@ import com.sapient.repository.Recognition;
 import com.sapient.repository.RecognitionCutOff;
 import com.sapient.repository.Votes;
 import com.sapient.repository.Winners;
+import com.sapient.service.JMSMessageSender;
 import com.sapient.service.MailService;
 import com.sapient.service.RecognitionService;
 
@@ -44,6 +46,9 @@ public class FeedbackController {
 	
 	@Autowired
 	private RecognitionService recognitionService;
+	
+	@Autowired 
+	private JMSMessageSender jmsMessageSender;
 	
 	@RequestMapping(value = "/submit", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public String submit(@RequestBody NominationForm feedbackFormData) {
@@ -69,8 +74,12 @@ public class FeedbackController {
 			recognition.setSenderCompId(feedbackFormData.getSubmitter());
 			recognition.setInsertedDate(new Date());
 			
-			return recognitionService.insertRecognition(recognition).toString();
-			
+			 Recognition message = recognitionService.insertRecognition(recognition);
+			 
+			 jmsMessageSender.send(new JMSMessage(message).toString());
+			 
+			 LOGGER.info("JMS Message is sent Async");
+			return message.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 			

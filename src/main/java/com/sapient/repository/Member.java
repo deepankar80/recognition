@@ -1,5 +1,7 @@
 package com.sapient.repository;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -8,7 +10,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "member")
 public class Member {
-
+	private static String[] locations = new String[] {"boston", "houston", "new jersey"};
+	
 	@Id
 	@Column(name = "oracle_Id")
 	private int oracleId;
@@ -118,5 +121,14 @@ public class Member {
 
 	public void setAccountId(int accountId) {
 		this.accountId = accountId;
+	}
+	
+	public boolean isUsaLocation() {
+		
+		if(this.officeLocation != null) {
+			return Arrays.asList(locations).contains(this.officeLocation.toLowerCase());
+		}
+		
+		return false;
 	}
 }

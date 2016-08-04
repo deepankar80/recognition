@@ -13,7 +13,7 @@ public class MailService {
 	public MailService() {
 		final String host = "ggnoutlook.sapient.com";
 		final String user = "ddixit@sapient.com";
-		final String password = "Pa55word@516";
+		final String password = "";
 
 		this.from = "ddixit@sapient.com";
 

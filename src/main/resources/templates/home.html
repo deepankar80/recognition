@@ -152,7 +152,7 @@
 									<div ng-show="nominee.oracleId" class="input-sm">
 									<table style="width:100%" class="input-sm"><tr>
 											   <td> Oracle Id : <b>{{nominee.oracleId}}</b></td>
-											   <td> Location : <b>{{nominee.officeLocation}}</b></td>
+											   <td> Location : <b>{{nominee.officeLocation}}</b> <img height="30px" width="30px" ng-show="nominee.usaLocation" alt="" src="images/us_flag.png"></img></td>
 											   <td width="50%"> Project : <b>{{nominee.projectDesc}}</b></td></tr></table> </div>
 									
 									<span class="input-sm" style="color:red" ng-show="nominee.oracleId == null? false : nominee.oracleId == nominator.oracleId"> Sorry, You can not nominate yourself.</span>
@@ -220,20 +220,22 @@
 			            <tab 
 			              ng-repeat="tab in recognitions | orderBy : 'category'"
 			              ng-attr-id="{{tab.category}}"
-			              heading="{{tab.category}}"
+			              heading="{{tab.category}} ({{loggedInUser.recognitionTeamFlag == 'Y' ? getMyVotingCount(tab.recognitions) + '/' : ''}}{{tab.recognitions.length}})"
 			              
 			              select="selectTab(tab.category)">
+			                
 			                <div class="tab-text" style="margin-left: -15px; min-height: 500px">
+			              	<p align="center" ng-show=""><font color="blue" size="5px"></font> votes selected</p>
 			                
 								<img ng-show="loadingView" style="margin-left: 45%; margin-top : 10%" width="50px" height="50px" src="images/loading.gif" />
-								<table ng-show="tab.recognitions.length" class="table table-bordered table-condensed input-sm" style="width:78%">
+								<table ng-show="tab.recognitions.length" class="table table-bordered table-condensed input-sm" style="width:76%">
 									<tr ng-repeat="recognition in tab.recognitions | orderBy : 'nominee.name' ">
 										<td>
 										<table class="input-sm" style="width:100%; background-color: #F0F0F0 ">
 										<tr><td width="30%">
 												&nbsp;&nbsp;Nominator : <b>{{recognition.nominator.name}} </b> ({{recognition.nominator.oracleId}})</td>
 											<td width="30%">	
-												Nominee : <b>{{recognition.nominee.name}} </b> ({{recognition.nominee.oracleId}})</td>
+												Nominee : <b>{{recognition.nominee.name}} </b> ({{recognition.nominee.oracleId}}) <img height="30px" width="30px" ng-show="recognition.nominee.usaLocation" alt="" src="images/us_flag.png"></img></td>
 											<td width="35%">	
 												Category : <b>{{recognition.recognitionCategory}}</b>
 											</td>
@@ -305,7 +307,7 @@
 										<tr><td width="29%">
 												&nbsp;&nbsp;Nominator : <b>{{recognition.nominator.name}} </b> ({{recognition.nominator.oracleId}})</td>
 											<td width="29%">	
-												Nominee : <b>{{recognition.nominee.name}} </b> ({{recognition.nominee.oracleId}})</td>
+												Nominee : <b>{{recognition.nominee.name}} </b> ({{recognition.nominee.oracleId}}) <img height="30px" width="30px" ng-show="recognition.nominee.usaLocation" alt="" src="images/us_flag.png"></img></td>
 											<td width="27%">	
 												Category : <b>{{recognition.recognitionCategory}}</b>
 											</td>
@@ -362,7 +364,7 @@
 										<tr><td width="29%">
 												&nbsp;&nbsp;Nominator : <b>{{winner.nomination.nominator.name}} </b> ({{winner.nomination.nominator.oracleId}})</td>
 											<td width="29%">	
-												Nominee : <b>{{winner.nomination.nominee.name}} </b> ({{winner.nomination.nominee.oracleId}})</td>
+												Nominee : <b>{{winner.nomination.nominee.name}} </b> ({{winner.nomination.nominee.oracleId}}) <img height="30px" width="30px" ng-show="winner.nomination.nominee.usaLocation" alt="" src="images/us_flag.png"></img></td>
 											<td width="27%">	
 												Category : <b>{{winner.nomination.recognitionCategory}}</b>
 											</td>
@@ -411,7 +413,7 @@
 										<tr><td width="29%">
 												&nbsp;&nbsp;Nominator : <b>{{nomination.nominator.name}} </b> ({{nomination.nominator.oracleId}})</td>
 											<td width="29%">	
-												Nominee : <b>{{nomination.nominee.name}} </b> ({{nomination.nominee.oracleId}})</td>
+												Nominee : <b>{{nomination.nominee.name}} </b> ({{nomination.nominee.oracleId}}) <img height="30px" width="30px" ng-show="nomination.nominee.usaLocation" alt="" src="images/us_flag.png"></img></td>
 											<td width="27%">	
 												Category : <b>{{nomination.recognitionCategory}}</b>
 											</td>

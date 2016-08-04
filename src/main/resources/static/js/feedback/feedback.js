@@ -317,6 +317,14 @@ function wysiwygeditor($scope, $http, $log, $window, $location,$dialogs) {
 		}
 	}
 	
+	$scope.getMyVotingCount = function(recognitions) {
+		var count = 0;
+		for(var i = 0; i < recognitions.length; i++) {
+			count += $scope.votes[recognitions[i].nominationId] ? 1 : 0;
+		}
+		return count;
+	}
+	
 	$scope.recognitions;
 	
 	$scope.loadLoggedInUser = function() {
