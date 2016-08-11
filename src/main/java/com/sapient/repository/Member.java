@@ -1,5 +1,6 @@
 package com.sapient.repository;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import javax.persistence.Column;
@@ -9,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "member")
-public class Member {
+public class Member implements Serializable {
 	private static String[] locations = new String[] {"boston", "houston", "new jersey"};
 	
 	@Id

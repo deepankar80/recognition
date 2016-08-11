@@ -3,10 +3,15 @@ package com.sapient.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sapient.controller.FeedbackController;
 import com.sapient.repository.Member;
 import com.sapient.repository.MembersRepository;
 import com.sapient.repository.Nomination;
@@ -22,6 +27,7 @@ import com.sapient.repository.WinnersRepository;
 
 @Service
 public class RecognitionService {
+	private static final Logger LOGGER = LoggerFactory.getLogger(RecognitionService.class);
 	
 	@Autowired
 	private RecognitionRepository recognitionRepository;
@@ -47,8 +53,10 @@ public class RecognitionService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<Nomination> getMyRecognition(Integer submittedBy) {
-		return nominationRepository.getMyNomination(submittedBy);
+	@Cacheable(value="nominationCache", key="#oracleId")
+	public List<Nomination> getMyRecognition(Integer oracleId) {
+		LOGGER.info("Loading recognition from DB for : " + oracleId);
+		return nominationRepository.getMyNomination(oracleId);
 	}
 	
 	@Transactional(readOnly = true)
@@ -57,6 +65,7 @@ public class RecognitionService {
 	}
 	
 	@Transactional
+	@CacheEvict(value="nominationCache", key="#recognition.nominator.oracleId")
 	public Recognition insertRecognition(Recognition recognition) {
 		return recognitionRepository.save(recognition);
 	}
